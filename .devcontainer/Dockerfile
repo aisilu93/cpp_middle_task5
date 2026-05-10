@@ -8,7 +8,9 @@ RUN apt update
 RUN apt install -y python3-minimal python3-pip pipx git less vim sudo cmake make g++-15 clang-format clangd-20
 
 # Install additional tools and libraries
-RUN apt install -y gnuplot
+RUN apt update && \
+    apt install -y gnuplot && \
+    apt clean
 
 # Cleanup
 RUN apt autoremove -y \
