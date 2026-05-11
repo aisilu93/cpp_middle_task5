@@ -20,11 +20,12 @@ namespace geometry::intersections {
  */
 class IntersectionVisitor {
 public:
-    std::optional<Point2D> operator()(const Shape &shape1, const Shape &shape2) {
+    std::optional<Point2D> operator()(const Shape &shape1, const Shape &shape2) const {
         throw std::logic_error("Unsupported compination of shapes.");
+        return std::nullopt;
     }
 
-    std::optional<Point2D> operator()(const Line &line1, const Line &line2) {
+    std::optional<Point2D> operator()(const Line &line1, const Line &line2) const {
         auto [x1, y1] = line1.start;
         auto [x2, y2] = line1.end;
         auto [x3, y3] = line2.start;
@@ -48,7 +49,7 @@ public:
         return std::nullopt;
     }
 
-    std::optional<Point2D> operator()(const Line &line, const Circle &circle) {
+    std::optional<Point2D> operator()(const Line &line, const Circle &circle) const {
         std::optional<Point2D> result;
         const auto &verts = circle.Vertices();
         if (std::ranges::any_of(std::views::iota(size_t{0}, verts.size()), [&](auto i) {
@@ -61,7 +62,7 @@ public:
         return std::nullopt;
     }
 
-    std::optional<Point2D> operator()(const Circle &circle1, const Circle &circle2) {
+    std::optional<Point2D> operator()(const Circle &circle1, const Circle &circle2) const {
         auto [x1, y1] = circle1.Center();
         auto [x2, y2] = circle2.Center();
         auto d = std::sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
