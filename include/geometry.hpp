@@ -11,9 +11,9 @@
 namespace geometry {
 
 /*
-* Добавьте к методам класса Point2D и Lines2DDyn все необходимые аттрибуты и спецификаторы
-* Важно: Возвращаемый тип и принимаемые аргументы менять не нужно
-*/
+ * Добавьте к методам класса Point2D и Lines2DDyn все необходимые аттрибуты и спецификаторы
+ * Важно: Возвращаемый тип и принимаемые аргументы менять не нужно
+ */
 struct Point2D {
     double x, y;
 
@@ -22,17 +22,11 @@ struct Point2D {
 
     // Comparison
     bool operator<(const Point2D &other) { return x < other.x && y < other.y; }
-    bool operator==(const Point2D &other) {
-        return x == other.x && y == other.y;
-    }
+    bool operator==(const Point2D &other) { return x == other.x && y == other.y; }
 
     // Binary math operators
-    Point2D operator+(const Point2D &other) const{
-        return {x + other.x, y + other.y};
-    }
-    Point2D operator-(const Point2D &other) const{
-        return {x - other.x, y - other.y};
-    }
+    Point2D operator+(const Point2D &other) const { return {x + other.x, y + other.y}; }
+    Point2D operator-(const Point2D &other) const { return {x - other.x, y - other.y}; }
     Point2D operator*(double value) { return {x * value, y * value}; }
     Point2D operator/(double value) { return {x / value, y / value}; }
 
@@ -86,7 +80,8 @@ struct BoundingBox {
 
     [[nodiscard]] constexpr double Width() const noexcept { return max_x - min_x; }
     [[nodiscard]] constexpr double Height() const noexcept { return max_y - min_y; }
-    [[nodiscard]] constexpr Point2D Center() const noexcept { return {(min_x + max_x) / 2, (min_y + max_y) / 2}; }};
+    [[nodiscard]] constexpr Point2D Center() const noexcept { return {(min_x + max_x) / 2, (min_y + max_y) / 2}; }
+};
 
 struct Line {
     Point2D start, end;
@@ -290,17 +285,28 @@ struct std::formatter<std::vector<geometry::Point2D>> {
 
     constexpr auto parse(std::format_parse_context &ctx) {
         auto it = ctx.begin();
-
-        /* ваш код здесь */
+        while (it != ctx.end() && *it != '}')
+            it++;
+        std::string_view sv(ctx.begin(), it - ctx.begin());
+        if (sv.starts_with(":new_line"))
+            use_new_line = true;
 
         return it;
     }
 
     template <typename FormatContext>
     auto format(const std::vector<geometry::Point2D> &v, FormatContext &ctx) {
+        auto out = ctx.out();
+        bool first = true;
+        for (const auto &point : v) {
+            if (first) {
+                first = false;
+                out = std::format_to(out, "{}{}", use_new_line ? "\t" : "", point);
+            } else
+                out = std::format_to(out, "{}{}", use_new_line ? "\n\t" : " ,", point);
+        }
 
-        /* ваш код здесь */
-        return ctx.out();
+        return out;
     }
 };
 
