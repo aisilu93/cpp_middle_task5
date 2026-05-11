@@ -256,7 +256,7 @@ inline bool BoundingBoxesOverlap(const Shape &shape1, const Shape &shape2) {
     return bb1.Overlaps(bb2);
 }
 
-std::optional<double> DistanceBetweenShapes(const Shape &shape1, const Shape &shape2) {
+inline std::optional<double> DistanceBetweenShapes(const Shape &shape1, const Shape &shape2) {
 
     return std::visit(queries::ShapeToShapeDistanceVisitor(), shape1, shape2);
 }
