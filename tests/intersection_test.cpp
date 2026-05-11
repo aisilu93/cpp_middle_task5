@@ -28,36 +28,42 @@ Triangle triangle({1, 1}, {1, 7}, {5, 2});
 Rectangle rectancle({1, 1}, 2, 3);
 
 TEST(IntersectionsTest, LinesYes) {
-    auto res = intersections::GetIntersectPoint(line1, line2);
+    Shape sh1 = line1, sh2 = line2;
+    auto res = intersections::GetIntersectPoint(sh1, sh2);
     EXPECT_TRUE(res.has_value());
     auto d = points_dist(res.value(), Point2D(3, 3));
     EXPECT_TRUE(std::abs(d) <= std::numeric_limits<double>::epsilon());
 }
 
 TEST(IntersectionsTest, LinesNo_Vertical) {
-    auto res = intersections::GetIntersectPoint(line1, line4);
+    Shape sh1 = line1, sh2 = line4;
+    auto res = intersections::GetIntersectPoint(sh1, sh2);
     EXPECT_TRUE(res.has_value());
     auto d = points_dist(res.value(), Point2D(7, 7));
     EXPECT_TRUE(std::abs(d) <= std::numeric_limits<double>::epsilon());
 }
 
 TEST(IntersectionsTest, LinesNo) {
-    auto res = intersections::GetIntersectPoint(line1, line3);
+    Shape sh1 = line1, sh2 = line3;
+    auto res = intersections::GetIntersectPoint(sh1, sh2);
     EXPECT_FALSE(res.has_value());
 }
 
 TEST(IntersectionsTest, LinesNo_Horizontal) {
-    auto res = intersections::GetIntersectPoint(line1, line5);
+    Shape sh1 = line1, sh2 = line5;
+    auto res = intersections::GetIntersectPoint(sh1, sh2);
     EXPECT_FALSE(res.has_value());
 }
 
 TEST(IntersectionsTest, LineCircleNo) {
-    auto res = intersections::GetIntersectPoint(line1, circle1);
+    Shape sh1 = line1, sh2 = circle1;
+    auto res = intersections::GetIntersectPoint(sh1, sh2);
     EXPECT_FALSE(res.has_value());
 }
 
 TEST(IntersectionsTest, LineCircleYes) {
-    auto res = intersections::GetIntersectPoint(line1, circle3);
+    Shape sh1 = line1, sh2 = circle3;
+    auto res = intersections::GetIntersectPoint(sh1, sh2);
     EXPECT_TRUE(res.has_value());
     auto d1 = points_dist(res.value(), Point2D(7, 7));
     auto d2 = points_dist(res.value(), Point2D(8, 8));
@@ -66,19 +72,22 @@ TEST(IntersectionsTest, LineCircleYes) {
 }
 
 TEST(IntersectionsTest, CirclesYes) {
-    auto res = intersections::GetIntersectPoint(circle1, circle2);
+    Shape sh1 = circle1, sh2 = circle2;
+    auto res = intersections::GetIntersectPoint(sh1, sh2);
     EXPECT_TRUE(res.has_value());
     auto d = points_dist(res.value(), Point2D(8, 2));
     EXPECT_TRUE(std::abs(d) <= std::numeric_limits<double>::epsilon());
 }
 
 TEST(IntersectionsTest, CirclesNo) {
-    auto res = intersections::GetIntersectPoint(circle1, circle3);
+    Shape sh1 = circle1, sh2 = circle3;
+    auto res = intersections::GetIntersectPoint(sh1, sh2);
     EXPECT_FALSE(res.has_value());
 }
 
 TEST(IntersectionsTest, CirclesYes_2Points) {
-    auto res = intersections::GetIntersectPoint(circle2, circle5);
+    Shape sh1 = circle2, sh2 = circle5;
+    auto res = intersections::GetIntersectPoint(sh1, sh2);
     EXPECT_TRUE(res.has_value());
     auto d1 = points_dist(res.value(), Point2D(10, 4));
     auto d2 = points_dist(res.value(), Point2D(11.6, 3.2));
@@ -86,10 +95,12 @@ TEST(IntersectionsTest, CirclesYes_2Points) {
 }
 
 TEST(IntersectionsTest, CirclesNo_Inside) {
-    auto res = intersections::GetIntersectPoint(circle2, circle4);
+    Shape sh1 = circle2, sh2 = circle4;
+    auto res = intersections::GetIntersectPoint(sh1, sh2);
     EXPECT_FALSE(res.has_value());
 }
 
 TEST(IntersectionsTest, Shapes_Excetion) {
-    EXPECT_THROW(intersections::GetIntersectPoint(triangle, rectancle), std::logic_error);
+    Shape sh1 = triangle, sh2 = rectancle;
+    EXPECT_THROW(intersections::GetIntersectPoint(sh1, sh2), std::logic_error);
 }

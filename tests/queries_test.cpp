@@ -14,49 +14,88 @@ Triangle triangle2({1, 1}, {1, 7}, {5, 2});
 Rectangle rectancle2({1, 1}, 2, 3);
 
 TEST(QueriesTest, Distance_PointToLine) {
-    auto res = queries::DistanceToPoint(line6, point1);
+    Shape sh = line6;
+    auto res = queries::DistanceToPoint(sh, point1);
     EXPECT_NEAR(res, 2.2360679, 1e-6);
 }
 
 TEST(QueriesTest, Distance_PointToCircle) {
-    auto res = queries::DistanceToPoint(circle6, point1);
+    Shape sh = circle6;
+    auto res = queries::DistanceToPoint(sh, point1);
     EXPECT_NEAR(res, 1.2360679, 1e-6);
 }
 
 TEST(QueriesTest, Distance_PointToTriangle) {
-    auto res = queries::DistanceToPoint(triangle2, point1);
+    Shape sh = triangle2;
+    auto res = queries::DistanceToPoint(sh, point1);
     EXPECT_NEAR(res, 0.624695, 1e-6);
 }
 
 TEST(QueriesTest, Distance_PointToRectangle) {
-    auto res = queries::DistanceToPoint(rectancle2, point1);
+    Shape sh = rectancle2;
+    auto res = queries::DistanceToPoint(sh, point1);
     EXPECT_NEAR(res, 2.0, 1e-6);
 }
 
 TEST(QueriesTest, Distance_CircleToTriangle) {
-    auto res = queries::DistanceBetweenShapes(circle6, triangle2);
+    Shape sh1 = circle6, sh2 = triangle2;
+    auto res = queries::DistanceBetweenShapes(sh1, sh2);
     EXPECT_FALSE(res.has_value());
 }
 
 TEST(QueriesTest, Distance_CircleToLine) {
-    auto res = queries::DistanceBetweenShapes(circle6, line6);
+    Shape sh1 = circle6, sh2 = line6;
+    auto res = queries::DistanceBetweenShapes(sh1, sh2);
     EXPECT_FALSE(res.has_value());
 }
 
 TEST(QueriesTest, Distance_CircleToItsOwn) {
-    auto res = queries::DistanceBetweenShapes(circle6, circle6);
+    Shape sh = circle6;
+    auto res = queries::DistanceBetweenShapes(sh, sh);
     EXPECT_TRUE(res.has_value());
     EXPECT_NEAR(res.value(), 0.0, 1e-6);
 }
 
 TEST(QueriesTest, Distance_CircleToCircle) {
-    auto res = queries::DistanceBetweenShapes(circle6, circle7);
+    Shape sh1 = circle6, sh2 = circle7;
+    auto res = queries::DistanceBetweenShapes(sh1, sh2);
     EXPECT_TRUE(res.has_value());
     EXPECT_NEAR(res.value(), 1.0, 1e-6);
 }
 
 TEST(QueriesTest, Distance_LineToLine) {
-    auto res = queries::DistanceBetweenShapes(line6, line7);
+    Shape sh1 = line6, sh2 = line7;
+    auto res = queries::DistanceBetweenShapes(sh1, sh2);
     EXPECT_TRUE(res.has_value());
     EXPECT_NEAR(res.value(), 3.0, 1e-6);
+}
+
+TEST(QueriesTest, GetBoundBox_Line) {
+    Shape shape = line6;
+    auto box = queries::GetBoundBox(shape);
+    EXPECT_DOUBLE_EQ(box.min_x, 3);
+    EXPECT_DOUBLE_EQ(box.min_y, 5);
+    EXPECT_DOUBLE_EQ(box.max_x, 4);
+    EXPECT_DOUBLE_EQ(box.max_y, 5);
+}
+
+TEST(QueriesTest, GetBoundBox_Circle) {
+    Shape shape = circle6;
+    auto box = queries::GetBoundBox(shape);
+    EXPECT_DOUBLE_EQ(box.min_x, 6);
+    EXPECT_DOUBLE_EQ(box.min_y, 1);
+    EXPECT_DOUBLE_EQ(box.max_x, 8);
+    EXPECT_DOUBLE_EQ(box.max_y, 3);
+}
+
+TEST(QueriesTest, GetHeight_Line) {
+    Shape shape = line6;
+    auto height = queries::GetHeight(shape);
+    EXPECT_DOUBLE_EQ(height, 5);
+}
+
+TEST(QueriesTest, GetHeight_Circle) {
+    Shape shape = circle6;
+    auto height = queries::GetHeight(shape);
+    EXPECT_DOUBLE_EQ(height, 3);
 }
