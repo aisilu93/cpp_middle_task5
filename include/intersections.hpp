@@ -26,6 +26,9 @@ public:
     }
 
     std::optional<Point2D> operator()(const Line &line1, const Line &line2) const {
+        if (&line1 == &line2)
+            return std::nullopt;
+
         auto [x1, y1] = line1.start;
         auto [x2, y2] = line1.end;
         auto [x3, y3] = line2.start;
@@ -62,7 +65,12 @@ public:
         return std::nullopt;
     }
 
+    std::optional<Point2D> operator()(const Circle &circle, const Line &line) const { return operator()(line, circle); }
+
     std::optional<Point2D> operator()(const Circle &circle1, const Circle &circle2) const {
+        if (&circle1 == &circle2)
+            return std::nullopt;
+
         auto [x1, y1] = circle1.Center();
         auto [x2, y2] = circle2.Center();
         auto d = std::sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
